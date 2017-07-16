@@ -2,32 +2,27 @@
 <template>
   <div id="app" v-if="categoryResponse.length">
     <h1>blackdaylight</h1>
-    <div v-if="category.id !== 1 && category.name !== 'home'" v-bind:class="category.slug" v-for="category in categoryResponse">
-      <h2 v-on:click="toggle(clicked)">
-        {{ category.name }}
-      </h2>
-      <ul :class="{selected: clicked}" >
-        <li v-if="category.id === post.categories[0]" v-for="post in postResponse" v-html="post.content.rendered"></li>
-      </ul>
-    </div>
+    <section v-if="category.id !== 1 && category.name !== 'home'" :class="category.slug" v-for="category in categoryResponse">
+      <category :category="category" :posts="postResponse"></category>
+    </section>
   </div>
 </template>
 
 <script>
+import Category from './components/Category'
 
 export default {
   name: 'app',
   components: {
+    Category
   },
   data () {
     return {
       categoryResponse: [],
-      postResponse: [],
-      clicked: false
+      postResponse: []
     }
   },
   methods: {
-
     fetchCategories: function () {
       fetch('http://50.87.249.59/~blackday/wp-json/wp/v2/categories?per_page=100')
       .then(
@@ -66,11 +61,8 @@ export default {
         }.bind(this)
       )
       .catch(function (err) {
-        console.log('Fetch Error :-S', err)
+        console.error('Fetch Error :-S', err)
       })
-    },
-    toggle: function (clicked) {
-      this.clicked = !clicked
     }
   },
   mounted: function () {
@@ -90,7 +82,7 @@ export default {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
-#app > div
+#app > section
   border: 1px solid #eee
   box-sizing: border-box
   margin: 1%
@@ -100,7 +92,4 @@ h1
   flex: 0 1 100%
   font-size: 2em
   margin: 2%
-h2
-  font-size: 1.5em
-  margin: 1%
 </style>
