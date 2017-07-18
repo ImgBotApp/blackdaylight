@@ -3,7 +3,7 @@
   <div id="app" v-if="categories.length">
     <h1>blackdaylight</h1>
     <section v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
-      <category :category="category" :posts="linkPosts"></category>
+      <category :category="category" :posts="posts.links"></category>
     </section>
   </div>
 </template>
@@ -20,50 +20,94 @@ export default {
   data () {
     return {
       categories: [],
-      linkPosts: []
+      posts: {
+        images: [],
+        links: [],
+        unfiltered: []
+      }
     }
   },
   methods: {
     fetchAll: function () {
       axios.all([this.fetchCategories(), this.fetchPosts()])
         .then(() => {
-          this.setPostCategoryNames()
-        }).catch(function (error) {
+          this.formatData()
+        }).catch(error => {
           console.error('fetchAll ' + error)
         })
     },
     fetchCategories: function () {
-      return axios.get('http://50.87.249.59/~blackday/wp-json/wp/v2/categories?per_page=25')
+      return axios.get('http://50.87.249.59/~blackday/wp-json/wp/v2/categories?per_page=100')
         .then(response => {
           this.categories = response.data
-        }).catch(function (error) {
+        }).catch(error => {
           console.error('fetchCategories ' + error)
         })
     },
     fetchPosts: function () {
       return axios.get('http://50.87.249.59/~blackday/wp-json/wp/v2/posts?per_page=100')
         .then(response => {
-          this.linkPosts = response.data
-        }).catch(function (error) {
+          this.posts.unfiltered = response.data
+        }).catch(error => {
           console.error('fetchPosts ' + error)
         })
+    },
+    filterPosts: function () {
+      const imagePosts = []
+      const linkPosts = []
+
+      return new Promise(function (resolve, reject) {
+        this.posts.unfiltered.forEach(post => {
+          if (post.format === 'image') {
+            imagePosts.push(post)
+          } else if (post.format === 'link') {
+            linkPosts.push(post)
+          }
+        })
+        this.posts.images = imagePosts
+        this.posts.links = linkPosts
+        resolve()
+      }.bind(this))
+    },
+    formatData: function () {
+      this.setPostCategoryNames()
+        .then(this.filterPosts())
+        .then(this.setBackgroundImages())
+        // TODO: fix
+        // .then(this.sortCategories())
+    },
+    setBackgroundImages: function () {
+      return new Promise(function (resolve, reject) {
+        this.posts.images.forEach(post => {
+          // find data-medium-file w/in post.content.rendered
+          const imgSrc = post.content.rendered.split('"')[17]
+
+          // if name contains a space, replace it with a hyphen
+          var id = post.categories[0].name.replace(/\s+/g, '-')
+
+          document.getElementById(id).style.backgroundImage = 'url(' + imgSrc + ')'
+        })
+        resolve()
+      }.bind(this))
     },
     setPostCategoryNames: function () {
       const categories = this.categories
 
-      this.linkPosts.forEach(function (post) {
-        // add category name to post data, except Uncategorized
-        post.categories.forEach(function (category, i) {
-          // TODO: if category name has already been found, don't call getCategoryById
-          if (category !== 1) {
-            post.categories[i] = {
-              id: category,
-              name: getCategoryById(category)
+      return new Promise(function (resolve, reject) {
+        this.posts.unfiltered.forEach(post => {
+          // add category name to post data, except Uncategorized
+          post.categories.forEach((category, i) => {
+            // TODO: if category name has already been found, don't call getCategoryById
+            if (category !== 1) {
+              post.categories[i] = {
+                id: category,
+                name: getCategoryById(category)
+              }
             }
-          }
+          })
         })
-      })
-      this.filterPosts()
+        resolve()
+      }.bind(this))
 
       function getCategoryById (id) {
         const numCategories = categories.length
@@ -79,31 +123,29 @@ export default {
         return
       }
     },
-    filterPosts: function () {
-      const linkPosts = []
-      const imagePosts = []
+    sortCategories: function () {
+      const prioritizedCategories = []
 
-      this.linkPosts.forEach(function (post) {
-        if (post.format === 'image') {
-          imagePosts.push(post)
-        } else if (post.format === 'link') {
-          linkPosts.push(post)
-        }
-      })
+      return new Promise(function (resolve, reject) {
+        // set all category priorities, except Uncategorized
+        this.categories.forEach(category => {
+          if (category.id !== 1) {
+            prioritizedCategories.push({
+              id: category.id,
+              name: category.name,
+              priority: category.description
+            })
+          }
+        })
+        this.categories = prioritizedCategories
+        this.categories.sort(compareCategoryPriorities)
 
-      this.linkPosts = linkPosts
-      this.setBackgroundImages(imagePosts)
-    },
-    setBackgroundImages: function (posts) {
-      posts.forEach(function (post) {
-        // find data-medium-file w/in post.content.rendered
-        var imgSrc = post.content.rendered.split('"')[17]
+        resolve()
+      }.bind(this))
 
-        // if name contains a space, replace it with a -
-        var id = post.categories[0].name.replace(/\s+/g, '-')
-
-        document.getElementById(id).style.backgroundImage = 'url(' + imgSrc + ')'
-      })
+      function compareCategoryPriorities (a, b) {
+        return a.priority - b.priority
+      }
     }
   },
   mounted: function () {
