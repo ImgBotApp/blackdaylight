@@ -112,8 +112,6 @@ export default {
         .then(this.formatCategories())
         .then(this.setBackgroundImages())
         .then(console.log(this.categories))
-
-      this.$forceUpdate()
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
