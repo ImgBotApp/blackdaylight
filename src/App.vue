@@ -119,7 +119,9 @@ export default {
       return new Promise(function (resolve, reject) {
         this.categories.forEach(category => {
           if (document.getElementById(category.slug)) {
-            document.getElementById(category.slug).style.backgroundImage = 'url(' + category.image + ')'
+            setTimeout(function () {
+              document.getElementById(category.slug).style.backgroundImage = 'url(' + category.image + ')'
+            }, 0)
           } else {
             console.error('Category ' + category.slug + ' does not exist in the DOM.')
           }
