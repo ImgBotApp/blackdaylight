@@ -69,23 +69,60 @@ export default {
         resolve()
       }.bind(this))
     },
+    formatCategories: function () {
+      const prioritizedCategories = []
+      const imagePosts = this.posts.images
+
+      return new Promise(function (resolve, reject) {
+        // set all category priorities, except Uncategorized & Home
+        this.categories.forEach(category => {
+          if (category.id !== 1 && category.name !== 'home') {
+            prioritizedCategories.push({
+              id: category.id,
+              image: getImage(category.id),
+              name: category.name,
+              priority: parseInt(category.description),
+              slug: category.slug
+            })
+          }
+        })
+        this.categories = prioritizedCategories
+        this.categories.sort(sortByPriority)
+        resolve()
+      }.bind(this))
+
+      function getImage (id) {
+        for (let i = 0; i < imagePosts.length; i++) {
+          if (id === imagePosts[i].categories[0].id) {
+            // return 'data-medium-file'
+            return imagePosts[i].content.rendered.split('"')[17]
+          }
+        }
+        return
+      }
+
+      function sortByPriority (a, b) {
+        return a.priority - b.priority
+      }
+    },
     formatData: function () {
       this.setPostCategoryNames()
         .then(this.filterPosts())
+        // .then(this.formatPosts())
+        .then(this.formatCategories())
         .then(this.setBackgroundImages())
-        // TODO: fix
-        // .then(this.sortCategories())
+        .then(console.log(this.categories))
+
+      this.$forceUpdate()
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
-        this.posts.images.forEach(post => {
-          // find data-medium-file w/in post.content.rendered
-          const imgSrc = post.content.rendered.split('"')[17]
-
-          // if name contains a space, replace it with a hyphen
-          var id = post.categories[0].name.replace(/\s+/g, '-')
-
-          document.getElementById(id).style.backgroundImage = 'url(' + imgSrc + ')'
+        this.categories.forEach(category => {
+          if (document.getElementById(category.slug)) {
+            document.getElementById(category.slug).style.backgroundImage = 'url(' + category.image + ')'
+          } else {
+            console.error('Category ' + category.slug + ' does not exist in the DOM.')
+          }
         })
         resolve()
       }.bind(this))
@@ -122,30 +159,6 @@ export default {
         console.error('Category ID (' + id + ') is not available.')
         return
       }
-    },
-    sortCategories: function () {
-      const prioritizedCategories = []
-
-      return new Promise(function (resolve, reject) {
-        // set all category priorities, except Uncategorized
-        this.categories.forEach(category => {
-          if (category.id !== 1) {
-            prioritizedCategories.push({
-              id: category.id,
-              name: category.name,
-              priority: category.description
-            })
-          }
-        })
-        this.categories = prioritizedCategories
-        this.categories.sort(compareCategoryPriorities)
-
-        resolve()
-      }.bind(this))
-
-      function compareCategoryPriorities (a, b) {
-        return a.priority - b.priority
-      }
     }
   },
   mounted: function () {
@@ -165,6 +178,7 @@ export default {
   flex-flow: row wrap
   justify-content: space-around
 #app > section
+  background-color: #000
   border: 1px solid #eee
   box-sizing: border-box
   height: 150px
