@@ -1,7 +1,6 @@
 
 <template>
   <div id="app" v-if="categories.length">
-    <h1>blackdaylight</h1>
     <section v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
       <category :category="category" :posts="posts.links"></category>
     </section>
@@ -74,9 +73,9 @@ export default {
       const imagePosts = this.posts.images
 
       return new Promise(function (resolve, reject) {
-        // set all category priorities, except Uncategorized & Home
+        // set all category priorities, except Uncategorized
         this.categories.forEach(category => {
-          if (category.id !== 1 && category.name !== 'home') {
+          if (category.id !== 1) {
             prioritizedCategories.push({
               id: category.id,
               image: getImage(category.id),
@@ -92,10 +91,12 @@ export default {
       }.bind(this))
 
       function getImage (id) {
-        for (let i = 0; i < imagePosts.length; i++) {
-          if (id === imagePosts[i].categories[0].id) {
-            // return 'data-medium-file'
-            return imagePosts[i].content.rendered.split('"')[17]
+        const numOfPosts = imagePosts.length
+
+        for (let i = 0; i < numOfPosts; i++) {
+          if (id === imagePosts[i].categories[0]) {
+            // return 'large-medium-file'
+            return imagePosts[i].content.rendered.split('"')[19]
           }
         }
         return
@@ -106,12 +107,9 @@ export default {
       }
     },
     formatData: function () {
-      this.setPostCategoryNames()
-        .then(this.filterPosts())
-        // .then(this.formatPosts())
+      this.filterPosts()
         .then(this.formatCategories())
         .then(this.setBackgroundImages())
-        .then(console.log(this.categories))
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
@@ -120,45 +118,10 @@ export default {
             setTimeout(function () {
               document.getElementById(category.slug).style.backgroundImage = 'url(' + category.image + ')'
             }, 0)
-          } else {
-            console.error('Category ' + category.slug + ' does not exist in the DOM.')
           }
         })
         resolve()
       }.bind(this))
-    },
-    setPostCategoryNames: function () {
-      const categories = this.categories
-
-      return new Promise(function (resolve, reject) {
-        this.posts.unfiltered.forEach(post => {
-          // add category name to post data, except Uncategorized
-          post.categories.forEach((category, i) => {
-            // TODO: if category name has already been found, don't call getCategoryById
-            if (category !== 1) {
-              post.categories[i] = {
-                id: category,
-                name: getCategoryById(category)
-              }
-            }
-          })
-        })
-        resolve()
-      }.bind(this))
-
-      function getCategoryById (id) {
-        const numCategories = categories.length
-
-        // return category name, if id exists
-        for (let i = 0; i < numCategories; i++) {
-          if (categories[i].id === id) {
-            return categories[i].name
-          }
-        }
-
-        console.error('Category ID (' + id + ') is not available.')
-        return
-      }
     }
   },
   mounted: function () {
@@ -168,28 +131,43 @@ export default {
 </script>
 
 <style lang="sass">
-#app
-  font-family: 'Avenir', Helvetica, Arial, sans-serif
+body
+  background-color: #fff
+  font-family: 'Rock Salt', cursive
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+
+h1
+  color: #2c3e50
+  font-size: 10vw
+  line-height: 1.5
+  margin: 0
   text-align: center
+
+a
+  color: #fff
+
+footer
+  font-size: .85em
+  margin: 2%
+  text-align: right
+
+  a
+    color: #000;
+
+#app
+  align-content: space-around
   color: #fff
   display: flex
   flex-flow: row wrap
   justify-content: space-around
+  text-align: center
+
 #app > section
-  background-color: #000
-  border: 1px solid #eee
+  background-size: 100% 100%
+  border: 5px solid #fff
   box-sizing: border-box
-  height: 150px
-  margin: 1%
-  padding: 1%
-  width: 48%
-h1
-  color: #2c3e50
-  flex: 0 1 100%
-  font-size: 2em
-  margin: 2%
-a
-  color: #fff
+  flex-grow: 1
+  height: 40vh
+  width: 50%
 </style>
