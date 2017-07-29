@@ -32,6 +32,7 @@ div.content
   padding-bottom: 10px
   width: 50%
   #daylight-approved &
+    border-right: 0
     width: 100%
 
 div.image
