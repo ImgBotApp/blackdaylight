@@ -1,9 +1,12 @@
 <template>
-  <div @click="toggle(clicked); animate()">
-    <h2><span>{{ category.name }}</span></h2>
-    <ul v-show="clicked">
-       <li v-for="post in posts" v-if="category.id === post.categories[0]" v-html="post.content.rendered"></li>
-    </ul>
+  <div class="container">
+    <div class="content">
+      <h2>{{ category.name }}</h2>
+      <ul>
+         <li v-for="post in posts" v-if="category.id === post.categories[0]" v-html="post.content.rendered"></li>
+      </ul>
+    </div>
+    <div class="image" v-if="category.slug !== 'daylight-approved'"></div>
   </div>
 </template>
 
@@ -11,51 +14,37 @@
 
 export default {
   name: 'category',
-  data () {
-    return {
-      clicked: false
-    }
-  },
   props: ['category', 'posts'],
-  methods: {
-    toggle: function (clicked) {
-      this.clicked = !clicked
-    },
-    animate: function () {
-      const categoryParent = this.$options._parentElm
-      const allSections = document.getElementsByTagName('section')
-
-      for (let i = 0; i < allSections.length; i++) {
-        const sectionDiv = allSections[i].getElementsByTagName('ul')[0]
-        sectionDiv.style.display = 'none'
-
-        allSections[i].style.width = null
-        allSections[i].style.order = null
-
-        if (this.clicked) {
-          categoryParent.style.width = '100%'
-          categoryParent.style.order = '-1'
-        }
-      }
-    }
-  }
+  methods: {}
 }
 </script>
 
 <!-- "scoped" attribute limits CSS to this component only -->
 <style scoped lang="sass">
-div
-  cursor: pointer
+div.container
   display: flex
-  flex-flow: column nowrap
-  height: 100%;
-  justify-content: center;
+  height: 100%
+
+div.content
+  border-right: 1px solid #000
+  text-align: center
+  width: 50%
+  #daylight-approved &
+    width: 100%
+
+div.image
+  background-size: 100% 100%
+  width: 50%
+
 h2
   font-size: 7vw
-  line-height: 1.25
+  line-height: 1.5
 
-  span
-    color: #fff
-    padding: 0 5%
-    text-shadow: 0 0 10px rgba(0, 0, 0, 1)
+ul
+  display: flex
+  flex-wrap: wrap
+
+li
+  line-height: 2
+  width: 50%
 </style>

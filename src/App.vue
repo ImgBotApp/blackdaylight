@@ -116,7 +116,7 @@ export default {
         this.categories.forEach(category => {
           if (document.getElementById(category.slug)) {
             setTimeout(function () {
-              document.getElementById(category.slug).style.backgroundImage = 'url(' + category.image + ')'
+              document.getElementById(category.slug).getElementsByClassName('image')[0].style.backgroundImage = 'url(' + category.image + ')'
             }, 0)
           }
         })
@@ -131,43 +131,41 @@ export default {
 </script>
 
 <style lang="sass">
+*
+  box-sizing: border-box
+
 body
-  background-color: #fff
+  background-color: #000
+  color: #fff
   font-family: 'Rock Salt', cursive
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
 
 h1
-  color: #2c3e50
+  color: #000
   font-size: 10vw
-  line-height: 1.5
+  line-height: 2
   margin: 0
   text-align: center
-
+  text-shadow: 0 0 10px #fe1800
 a
-  color: #fff
+  color: #fe1800
+  cursor: pointer
+  text-decoration: none
+  &:hover
+    color: #fff
+    text-decoration: underline
 
 footer
   font-size: .85em
   margin: 2%
   text-align: right
 
-  a
-    color: #000;
-
-#app
-  align-content: space-around
-  color: #fff
-  display: flex
-  flex-flow: row wrap
-  justify-content: space-around
-  text-align: center
-
 #app > section
-  background-size: 100% 100%
-  border: 5px solid #fff
-  box-sizing: border-box
-  flex-grow: 1
-  height: 40vh
-  width: 50%
+  height: 350px
+  &:nth-child(even)
+    div.content
+      border-left: 1px solid #000
+      border-right: 0
+      order: 1
 </style>
