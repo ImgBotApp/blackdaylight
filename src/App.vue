@@ -1,7 +1,7 @@
 
 <template>
   <div id="app" v-if="categories.length">
-    <section v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
+    <section class="js-equal-height" v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
       <category :category="category" :posts="posts.links"></category>
     </section>
   </div>
@@ -109,12 +109,13 @@ export default {
     formatData: function () {
       this.filterPosts()
         .then(this.formatCategories())
+        .then(this.setSectionsHeight())
         .then(this.setBackgroundImages())
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
         this.categories.forEach(category => {
-          if (document.getElementById(category.slug)) {
+          if (document.getElementById(category.slug) && category.slug !== 'daylight-approved') {
             setTimeout(function () {
               document.getElementById(category.slug).getElementsByClassName('image')[0].style.backgroundImage = 'url(' + category.image + ')'
             }, 0)
@@ -122,6 +123,36 @@ export default {
         })
         resolve()
       }.bind(this))
+    },
+    setSectionsHeight: function () {
+      if (document.addEventListener) {
+        window.addEventListener('resize', function () {
+          setHeight('section')
+        })
+      }
+
+      setTimeout(function () {
+        setHeight('section')
+      }, 1000)
+
+      function setHeight (selector) {
+        const elements = document.querySelectorAll(selector)
+        const elementsLength = elements.length
+        let maxHeight = 0
+
+        if (elements && elementsLength) {
+          for (let i = 0; i < elementsLength; i++) { // get max height
+            elements[i].style.height = '' // reset height attr
+            if (elements[i].clientHeight > maxHeight) {
+              maxHeight = elements[i].clientHeight
+            }
+          }
+
+          for (let i = 0; i < elementsLength; i++) { // set max height to all elements
+            elements[i].style.height = (maxHeight + 10) + 'px'
+          }
+        }
+      }
     }
   },
   mounted: function () {
@@ -130,42 +161,67 @@ export default {
 }
 </script>
 
+<!--
+  red: #fe0000 rgba(254, 0, 0, 1)
+-->
 <style lang="sass">
+@import url('https://fonts.googleapis.com/css?family=Rock+Salt"');
+
+@font-face
+  font-family: 'Moonhouse'
+  src: url('assets/fonts/nimavisual_moonhouse/moonhouse.ttf')
+
 *
   box-sizing: border-box
 
 body
   background-color: #000
   color: #fff
-  font-family: 'Rock Salt', cursive
+  font-family: 'Moonhouse', 'Rock Salt', cursive
+  font-size: 1.75vw
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+  letter-spacing: 1px
+  text-transform: lowercase
+
+header
+  border-bottom: 4px solid #be0000
+  border-bottom: 4px solid rgba(254, 0, 0, .75)
 
 h1
-  color: #000
+  color: #fe0000
   font-size: 10vw
   line-height: 2
   margin: 0
   text-align: center
-  text-shadow: 0 0 10px #fe1800
+
 a
-  color: #fe1800
+  color: #fe0000
   cursor: pointer
   text-decoration: none
   &:hover
-    color: #fff
     text-decoration: underline
 
 footer
+  display: flex
   font-size: .85em
+  justify-content: space-between
   margin: 2%
-  text-align: right
 
 #app > section
-  height: 350px
+  border-bottom: 4px solid #be0000
+  border-bottom: 4px solid rgba(254, 0, 0, .75)
+  height: auto
   &:nth-child(even)
     div.content
-      border-left: 1px solid #000
+      border-left: 1px solid #be0000
+      border-left: 1px solid rgba(254, 0, 0, .75)
       border-right: 0
       order: 1
+    div.image
+      border-left: 0
+      border-right: 1px solid #be0000
+      border-right: 1px solid rgba(254, 0, 0, .75)
+  a
+    display: block
 </style>

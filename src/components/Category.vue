@@ -26,23 +26,28 @@ div.container
   height: 100%
 
 div.content
-  border-right: 1px solid #000
+  border-right: 1px solid #be0000
+  border-right: 1px solid rgba(254, 0, 0, .75)
   text-align: center
+  padding-bottom: 10px
   width: 50%
   #daylight-approved &
     width: 100%
 
 div.image
   background-size: 100% 100%
+  border-left: 1px solid #be0000
+  border-left: 1px solid rgba(254, 0, 0, .75)
   width: 50%
 
 h2
   font-size: 7vw
-  line-height: 1.5
+  line-height: 1.25
 
 ul
   display: flex
   flex-wrap: wrap
+  justify-content: center
 
 li
   line-height: 2
