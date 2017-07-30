@@ -26,8 +26,7 @@ div.container
   height: 100%
 
 div.content
-  border-right: 1px solid #be0000
-  border-right: 1px solid rgba(254, 0, 0, .75)
+  border-right: 1px solid #000
   text-align: center
   padding-bottom: 10px
   width: 50%
@@ -37,8 +36,7 @@ div.content
 
 div.image
   background-size: 100% 100%
-  border-left: 1px solid #be0000
-  border-left: 1px solid rgba(254, 0, 0, .75)
+  border-left: 1px solid #000
   width: 50%
 
 h2

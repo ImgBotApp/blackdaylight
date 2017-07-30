@@ -175,7 +175,7 @@ export default {
   box-sizing: border-box
 
 body
-  background-color: #000
+  background: #111 url('assets/zwartevilt.png')
   color: #fff
   font-family: 'Moonhouse', 'Rock Salt', cursive
   font-size: 1.75vw
@@ -185,8 +185,7 @@ body
   text-transform: lowercase
 
 header
-  border-bottom: 4px solid #be0000
-  border-bottom: 4px solid rgba(254, 0, 0, .75)
+  border-bottom: 2px solid #000
 
 h1
   color: #fe0000
@@ -196,32 +195,30 @@ h1
   text-align: center
 
 a
-  color: #fe0000
+  color: rgba(254, 0, 0, .85)
   cursor: pointer
   text-decoration: none
   &:hover
+    color: #fe0000
     text-decoration: underline
 
 footer
   display: flex
-  font-size: .85em
+  font-size: .65em
   justify-content: space-between
   margin: 2%
 
 #app > section
-  border-bottom: 4px solid #be0000
-  border-bottom: 4px solid rgba(254, 0, 0, .75)
+  border-bottom: 2px solid #000
   height: auto
   &:nth-child(even)
     div.content
-      border-left: 1px solid #be0000
-      border-left: 1px solid rgba(254, 0, 0, .75)
+      border-left: 1px solid #000
       border-right: 0
       order: 1
     div.image
       border-left: 0
-      border-right: 1px solid #be0000
-      border-right: 1px solid rgba(254, 0, 0, .75)
+      border-right: 1px solid #000
   a
     display: block
 </style>
