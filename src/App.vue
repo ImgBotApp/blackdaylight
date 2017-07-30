@@ -1,7 +1,7 @@
 
 <template>
   <div id="app" v-if="categories.length">
-    <section class="js-equal-height" v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
+    <section v-if="category.id !== 1 && category.name !== 'home'" :id="category.slug" v-for="category in categories">
       <category :category="category" :posts="posts.links"></category>
     </section>
   </div>
@@ -63,9 +63,15 @@ export default {
             linkPosts.push(post)
           }
         })
+        linkPosts.sort(sortBySlug)
+
         this.posts.images = imagePosts
         this.posts.links = linkPosts
         resolve()
+
+        function sortBySlug (a, b) {
+          return (a.slug < b.slug) ? -1 : (a.slug > b.slug) ? 1 : 0
+        }
       }.bind(this))
     },
     formatCategories: function () {
@@ -204,7 +210,7 @@ a
 
 footer
   display: flex
-  font-size: .65em
+  font-size: .75em
   justify-content: space-between
   margin: 2%
 
