@@ -42,7 +42,8 @@ div.image
 h2
   font-size: 7vw
   line-height: 1.25
-
+  @media screen and (min-width: 1440px)
+    font-size: 100.8px
 ul
   display: flex
   flex-wrap: wrap

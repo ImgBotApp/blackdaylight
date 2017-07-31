@@ -189,6 +189,8 @@ body
   -moz-osx-font-smoothing: grayscale
   letter-spacing: 1px
   text-transform: lowercase
+  @media screen and (min-width: 1440px)
+    font-size: 25.2px
 
 header
   border-bottom: 2px solid #000
@@ -199,6 +201,8 @@ h1
   line-height: 2
   margin: 0
   text-align: center
+  @media screen and (min-width: 1440px)
+    font-size: 144px
 
 a
   color: rgba(254, 0, 0, .85)
@@ -213,6 +217,9 @@ footer
   font-size: .75em
   justify-content: space-between
   margin: 2%
+
+#app-container
+  max-width: 1440px
 
 #app > section
   border-bottom: 2px solid #000
