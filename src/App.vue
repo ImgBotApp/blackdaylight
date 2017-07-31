@@ -254,7 +254,7 @@ footer
 
 /* ref: http://tobiasahlin.com/spinkit/ */
 #sk-fading-circle
-  margin: 15vh auto
+  margin: 15vh auto 55vh
   width: 75px
   height: 75px
   position: relative
