@@ -113,10 +113,20 @@ export default {
       }
     },
     formatData: function () {
+      const app = document.getElementById('app')
+      const preloader = document.getElementById('sk-fading-circle')
+
       this.filterPosts()
         .then(this.formatCategories())
         .then(this.setSectionsHeight())
         .then(this.setBackgroundImages())
+
+      setTimeout(function () {
+        preloader.style.display = 'none'
+        app.style.visibility = 'visible'
+        app.style.opacity = 1
+        document.body.style.overflow = 'auto'
+      }, 5000)
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
@@ -188,6 +198,7 @@ body
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   letter-spacing: 1px
+  overflow: hidden
   text-transform: lowercase
   @media screen and (min-width: 1440px)
     font-size: 25.2px
@@ -222,6 +233,11 @@ footer
   margin: 0 auto
   max-width: 1440px
 
+#app
+  opacity: 0
+  transition: visibility 0s, opacity 1s ease-in
+  visibility: hidden
+
 #app > section
   border-bottom: 2px solid #000
   height: auto
@@ -235,4 +251,116 @@ footer
       border-right: 1px solid #000
   a
     display: block
+
+/* ref: http://tobiasahlin.com/spinkit/ */
+#sk-fading-circle
+  margin: 15vh auto
+  width: 75px
+  height: 75px
+  position: relative
+  .sk-circle
+    width: 100%
+    height: 100%
+    position: absolute
+    left: 0
+    top: 0
+  .sk-circle:before
+    content: ''
+    display: block
+    margin: 0 auto
+    width: 15%
+    height: 15%
+    background-color: #fe0000
+    border-radius: 100%
+    -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both
+            animation: sk-circleFadeDelay 1.2s infinite ease-in-out both
+  .sk-circle2
+    -webkit-transform: rotate(30deg)
+        -ms-transform: rotate(30deg)
+            transform: rotate(30deg)
+  .sk-circle3
+    -webkit-transform: rotate(60deg)
+        -ms-transform: rotate(60deg)
+            transform: rotate(60deg)
+  .sk-circle4
+    -webkit-transform: rotate(90deg)
+        -ms-transform: rotate(90deg)
+            transform: rotate(90deg)
+  .sk-circle5
+    -webkit-transform: rotate(120deg)
+        -ms-transform: rotate(120deg)
+            transform: rotate(120deg)
+  .sk-circle6
+    -webkit-transform: rotate(150deg)
+        -ms-transform: rotate(150deg)
+            transform: rotate(150deg)
+  .sk-circle7
+    -webkit-transform: rotate(180deg)
+        -ms-transform: rotate(180deg)
+            transform: rotate(180deg)
+  .sk-circle8
+    -webkit-transform: rotate(210deg)
+        -ms-transform: rotate(210deg)
+            transform: rotate(210deg)
+  .sk-circle9
+    -webkit-transform: rotate(240deg)
+        -ms-transform: rotate(240deg)
+            transform: rotate(240deg)
+  .sk-circle10
+    -webkit-transform: rotate(270deg)
+        -ms-transform: rotate(270deg)
+            transform: rotate(270deg)
+  .sk-circle11
+    -webkit-transform: rotate(300deg)
+        -ms-transform: rotate(300deg)
+            transform: rotate(300deg)
+  .sk-circle12
+    -webkit-transform: rotate(330deg)
+        -ms-transform: rotate(330deg)
+            transform: rotate(330deg)
+  .sk-circle2:before
+    -webkit-animation-delay: -1.1s
+            animation-delay: -1.1s
+  .sk-circle3:before
+    -webkit-animation-delay: -1s
+            animation-delay: -1s
+  .sk-circle4:before
+    -webkit-animation-delay: -0.9s
+            animation-delay: -0.9s
+  .sk-circle5:before
+    -webkit-animation-delay: -0.8s
+            animation-delay: -0.8s
+  .sk-circle6:before
+    -webkit-animation-delay: -0.7s
+            animation-delay: -0.7s
+  .sk-circle7:before
+    -webkit-animation-delay: -0.6s
+            animation-delay: -0.6s
+  .sk-circle8:before
+    -webkit-animation-delay: -0.5s
+            animation-delay: -0.5s
+  .sk-circle9:before
+    -webkit-animation-delay: -0.4s
+            animation-delay: -0.4s
+  .sk-circle10:before
+    -webkit-animation-delay: -0.3s
+            animation-delay: -0.3s
+  .sk-circle11:before
+    -webkit-animation-delay: -0.2s
+            animation-delay: -0.2s
+  .sk-circle12:before
+    -webkit-animation-delay: -0.1s
+            animation-delay: -0.1s
+
+@-webkit-keyframes sk-circleFadeDelay
+  0%, 39%, 100%
+    opacity: 0
+  40%
+    opacity: 1
+
+@keyframes sk-circleFadeDelay
+  0%, 39%, 100%
+    opacity: 0
+  40%
+    opacity: 1
 </style>
