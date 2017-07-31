@@ -171,11 +171,11 @@ export default {
   red: #fe0000 rgba(254, 0, 0, 1)
 -->
 <style lang="sass">
-@import url('https://fonts.googleapis.com/css?family=Rock+Salt"');
+@import url('https://fonts.googleapis.com/css?family=Rock+Salt');
 
 @font-face
-  font-family: 'Moonhouse'
-  src: url('assets/fonts/nimavisual_moonhouse/moonhouse.ttf')
+  font-family: 'Amsterdam'
+  src: url('assets/fonts/amsterdam.ttf')
 
 *
   box-sizing: border-box
@@ -183,7 +183,7 @@ export default {
 body
   background: #111 url('assets/zwartevilt.png')
   color: #fff
-  font-family: 'Moonhouse', 'Rock Salt', cursive
+  font-family: 'Rock Salt', 'Amsterdam', cursive
   font-size: 1.75vw
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
@@ -219,6 +219,7 @@ footer
   margin: 2%
 
 #app-container
+  margin: 0 auto
   max-width: 1440px
 
 #app > section
