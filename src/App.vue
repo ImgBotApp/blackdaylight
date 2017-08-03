@@ -118,7 +118,7 @@ export default {
 
       this.filterPosts()
         .then(this.formatCategories())
-        .then(this.setSectionsHeight())
+        .then(this.setContentHeight())
         .then(this.setBackgroundImages())
 
       setTimeout(function () {
@@ -126,7 +126,7 @@ export default {
         app.style.visibility = 'visible'
         app.style.opacity = 1
         document.body.style.overflow = 'auto'
-      }, 5000)
+      }, 1500)
     },
     setBackgroundImages: function () {
       return new Promise(function (resolve, reject) {
@@ -140,15 +140,23 @@ export default {
         resolve()
       }.bind(this))
     },
-    setSectionsHeight: function () {
+    setContentHeight: function () {
       if (document.addEventListener) {
         window.addEventListener('resize', function () {
-          setHeight('section')
+          if (window.innerWidth <= 768) {
+            setHeight('.content')
+          } else {
+            setHeight('section')
+          }
         })
       }
 
       setTimeout(function () {
-        setHeight('section')
+        if (window.innerWidth <= 768) {
+          setHeight('.content')
+        } else {
+          setHeight('section')
+        }
       }, 1000)
 
       function setHeight (selector) {
@@ -157,15 +165,45 @@ export default {
         let maxHeight = 0
 
         if (elements && elementsLength) {
-          for (let i = 0; i < elementsLength; i++) { // get max height
-            elements[i].style.height = '' // reset height attr
+          // get max height
+          for (let i = 0; i < elementsLength; i++) {
+            elements[i].style.height = '' // reset height
             if (elements[i].clientHeight > maxHeight) {
               maxHeight = elements[i].clientHeight
             }
           }
 
-          for (let i = 0; i < elementsLength; i++) { // set max height to all elements
-            elements[i].style.height = (maxHeight + 10) + 'px'
+          if (selector === '.content') {
+            const imgDivs = document.querySelectorAll('.image')
+            const imgDivsLength = imgDivs.length
+            const sections = document.querySelectorAll('section')
+            const sectionsLength = sections.length
+
+            // reset sections height
+            for (let i = 0; i < sectionsLength; i++) {
+              sections[i].style.height = ''
+            }
+
+            // set height of all content divs
+            for (let i = 0; i < elementsLength; i++) {
+              if (elements[i].style.height > 500) {
+                elements[i].style.height = (maxHeight + 10) + 'px'
+              } else {
+                elements[i].style.height = 'auto'
+              }
+            }
+
+            // set height of all img divs
+            for (let i = 0; i < imgDivsLength; i++) {
+              if (elements[i].style.height > 500) {
+                imgDivs[i].style.height = (maxHeight + 10) + 'px'
+              }
+            }
+          } else {
+             // set height of all sections
+            for (let i = 0; i < elementsLength; i++) {
+              elements[i].style.height = (maxHeight + 10) + 'px'
+            }
           }
         }
       }
@@ -194,12 +232,14 @@ body
   background: #111 url('assets/zwartevilt.png')
   color: #fff
   font-family: 'Rock Salt', 'Amsterdam', cursive
-  font-size: 1.75vw
+  font-size: 4.75vw
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
   letter-spacing: 1px
   overflow: hidden
   text-transform: lowercase
+  @media screen and (min-width: 768px)
+    font-size: 1.75vw
   @media screen and (min-width: 1440px)
     font-size: 25.2px
 
@@ -225,9 +265,11 @@ a
 
 footer
   display: flex
-  font-size: .75em
+  font-size: .5em
   justify-content: space-between
   margin: 2%
+  @media screen and (min-width: 1440px)
+    font-size: .75em
 
 #app-container
   margin: 0 auto
