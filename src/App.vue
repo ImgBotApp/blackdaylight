@@ -99,10 +99,17 @@ export default {
       function getImage (id) {
         const numOfPosts = imagePosts.length
 
+        // return value of src attribute
         for (let i = 0; i < numOfPosts; i++) {
           if (id === imagePosts[i].categories[0]) {
-            // return 'large-medium-file'
-            return imagePosts[i].content.rendered.split('"')[19]
+            const postArray = imagePosts[i].content.rendered.split('"')
+            const postArrayLength = postArray.length
+
+            for (let j = 0; j < postArrayLength; j++) {
+              if (postArray[j].match('src')) {
+                return postArray[j + 1]
+              }
+            }
           }
         }
         return
@@ -120,6 +127,7 @@ export default {
         .then(this.formatCategories())
         .then(this.setContentHeight())
         .then(this.setBackgroundImages())
+        // .then(console.log(this.posts))
 
       setTimeout(function () {
         preloader.style.display = 'none'
