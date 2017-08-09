@@ -134,6 +134,14 @@ export default {
         app.style.visibility = 'visible'
         app.style.opacity = 1
         document.body.style.overflow = 'auto'
+
+        const tags = document.getElementsByTagName('ul')
+
+        for (let i = 0; i < tags.length; i++) {
+          if (tags[i].childElementCount < 6) {
+            tags[i].style.flexDirection = 'column'
+          }
+        }
       }, 1500)
     },
     setBackgroundImages: function () {
