@@ -36,7 +36,7 @@ export default {
         })
     },
     fetchCategories: function () {
-      return axios.get('http://50.87.249.59/~blackday/wp-json/wp/v2/categories?per_page=100')
+      return axios.get('http://www.blackdaylight.com/wp-json/wp/v2/categories?per_page=100')
         .then(response => {
           this.categories = response.data
         }).catch(error => {
@@ -44,7 +44,7 @@ export default {
         })
     },
     fetchPosts: function () {
-      return axios.get('http://50.87.249.59/~blackday/wp-json/wp/v2/posts?per_page=100')
+      return axios.get('http://www.blackdaylight.com/wp-json/wp/v2/posts?per_page=100')
         .then(response => {
           this.posts.unfiltered = response.data
         }).catch(error => {
